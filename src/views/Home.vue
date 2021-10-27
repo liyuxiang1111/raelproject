@@ -8,6 +8,7 @@
     <Recommendprojects></Recommendprojects>
     <Rank></Rank>
     <Shortbar></Shortbar>
+    <Message></Message>
     <Footer></Footer>
   </div>
 </template>
@@ -20,6 +21,7 @@ import Recommendprojects from '@/components/Home/Recommendprojects.vue'
 import Rank from '@/components/Home/Rank.vue'
 import Shortbar from '@/components/Toolbar/Shortbar.vue'
 import Footer from '@/components/Footer/Copyright.vue'
+import Message from '@/components/Home/Message.vue'
 export default {
   name: 'Home',
   components: {
@@ -29,7 +31,8 @@ export default {
     Shortbar,
     Footer,
     Recommendprojects,
-    Rank
+    Rank,
+    Message
   }
 }
 </script>

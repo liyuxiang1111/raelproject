@@ -29,8 +29,8 @@
       <div>
         <h2>主要的项目</h2>
       </div>
-      <h2 v-if="false" style="color: #b1191a">该类型数据库中并没有对应的数据!!!</h2>
-      <Project v-else></Project>
+      <Project v-if="false"></Project>
+      <h2 v-else style="color: #b1191a">该类型数据库中并没有对应的数据!!!</h2>
       <div class="pagebar-box">
         <Pagebar></Pagebar>
       </div>
@@ -45,6 +45,9 @@ import Project from '@/components/Search/Searchproject/Searchproject.vue'
 import Footer from '@/components/Footer/Copyright.vue'
 import Pagebar from '@/components/Pagebar/Pagebar.vue'
 export default {
+  created() {
+    this.initrecommends()
+  },
   data() {
     return {
       imag: require(`@/assets/image/person_simple.jpg`)
@@ -55,6 +58,20 @@ export default {
     Project,
     Footer,
     Pagebar
+  },
+  methods: {
+    async initrecommends() {
+      await this.$http({
+        method: 'POST',
+        url: '/type/' + this.$route.params.recommendid
+      }).then(({ data: res }) => {
+        if (res.success == false) {
+          alert(res.message)
+        } else {
+          console.log(res.data)
+        }
+      })
+    }
   }
 }
 </script>

@@ -2,7 +2,7 @@
   <div class="contentbar-container">
     <div class="contentbar">
       <ul>
-        <router-link to="/person/manage">
+        <router-link to="/person">
           <li>
             <span class="glyphicon glyphicon-send"></span>
             我创建的

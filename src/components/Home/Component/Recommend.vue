@@ -1,8 +1,8 @@
 <template>
   <div class="Component-container">
-    <router-link to="">
-      <div class="Component-box container">
-        <div v-for="item in list" :key="item.id" class="col-lg-6">
+    <div class="Component-box container">
+      <div v-for="item in list" :key="item.id" class="col-lg-6">
+        <router-link :to="{ path: '/type/' + item.id }">
           <div class="border-flex">
             <div class="card">
               <span></span><span></span><span></span><span></span>
@@ -23,9 +23,9 @@
               </div>
             </div>
           </div>
-        </div>
+        </router-link>
       </div>
-    </router-link>
+    </div>
   </div>
 </template>
 

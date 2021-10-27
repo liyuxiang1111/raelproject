@@ -25,15 +25,15 @@ const router = new VueRouter({
     { path: '/register', component: Register },
     { path: '/home', component: Home },
     { path: '/member', component: Member },
-    { path: '/project', component: Project },
-    { path: '/type', component: Type },
+    { path: '/project/:projectid', component: Project },
+    { path: '/type/:recommendid', component: Type },
     {
       path: '/person',
       component: Person,
       children: [
         { path: 'privacy', component: Privacy },
         { path: 'information', component: Information },
-        { path: 'manage', component: Manage },
+        { path: '', component: Manage },
         { path: 'create', component: Create }
       ]
     }
