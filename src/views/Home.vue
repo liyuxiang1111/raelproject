@@ -1,18 +1,41 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="home-container">
+    <div class="home-box">
+      <Nav></Nav>
+    </div>
+    <Slideshow></Slideshow>
+    <Recommends></Recommends>
+    <Recommendprojects></Recommendprojects>
+    <Rank></Rank>
+    <Shortbar></Shortbar>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import Nav from '@/components/Nav/Nav.vue'
+import Slideshow from '@/components/Home/Slideshow.vue'
+import Recommends from '@/components/Home/Recommends.vue'
+import Recommendprojects from '@/components/Home/Recommendprojects.vue'
+import Rank from '@/components/Home/Rank.vue'
+import Shortbar from '@/components/Toolbar/Shortbar.vue'
+import Footer from '@/components/Footer/Copyright.vue'
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    Nav,
+    Slideshow,
+    Recommends,
+    Shortbar,
+    Footer,
+    Recommendprojects,
+    Rank
   }
 }
 </script>
+
+<style lang="less" scoped>
+.home-container {
+  position: relative;
+}
+</style>

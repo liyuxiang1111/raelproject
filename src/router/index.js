@@ -1,29 +1,56 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+
+// 导入需要的组件
+import Login from '@/views/Login.vue'
+import Register from '@/views/Register.vue'
+import Home from '@/views/Home.vue'
+import Person from '@/views/Person.vue'
+import Project from '@/views/Project.vue'
+import Type from '@/views/Type.vue'
+import Privacy from '@/components/Person/Content/Privacy.vue'
+import Information from '@/components/Person/Content/Information.vue'
+import Manage from '@/components/Person/Content/Manage.vue'
+import Create from '@/components/Person/Content/Create.vue'
+import Search from '@/components/Search/Search.vue'
+import Member from '@/components/Member/Member.vue'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
-
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+  routes: [
+    { path: '/', redirect: '/login' },
+    { path: '/search', component: Search },
+    { path: '/login', component: Login },
+    { path: '/register', component: Register },
+    { path: '/home', component: Home },
+    { path: '/member', component: Member },
+    { path: '/project', component: Project },
+    { path: '/type', component: Type },
+    {
+      path: '/person',
+      component: Person,
+      children: [
+        { path: 'privacy', component: Privacy },
+        { path: 'information', component: Information },
+        { path: 'manage', component: Manage },
+        { path: 'create', component: Create }
+      ]
+    }
+  ]
 })
+
+/* router.beforeEach(function(to, from, next) {
+  if (pathArr.indexOf(to.path) !== -1) {
+    const token = localStorage.getItem('token')
+    if (token) {
+      next()
+    } else {
+      next('/login')
+    }
+  } else {
+    next()
+  }
+}) */
 
 export default router
