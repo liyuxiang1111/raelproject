@@ -17,9 +17,26 @@
             <router-link to="">信息</router-link>
           </li>
           <li class="user-head">
-            <router-link to="">
+            <router-link @mouseenter="show" to="/person">
               <img :src="imag" alt="" />
             </router-link>
+            <ul class="white boxshadowcolor user-menu">
+              <li class="user-name ">
+                <div class="user_name">${user.userName}</div>
+              </li>
+              <li class=" glyphicon glyphicon-search">
+                <router-link to="/search">搜索</router-link>
+              </li>
+              <li class=" glyphicon glyphicon-pencil">
+                <router-link to="">修改个人信息</router-link>
+              </li>
+              <li class="glyphicon glyphicon-folder-close">
+                <router-link to="">我的项目</router-link>
+              </li>
+              <li class="glyphicon glyphicon-off">
+                <router-link to="">退出登录</router-link>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
@@ -29,9 +46,13 @@
 
 <script>
 export default {
+  props: ['list'],
   data() {
     return {
-      imag: require(`@/assets/image/person_simple.jpg`)
+      imag: require(`@/assets/image/person_simple.jpg`),
+      name: '',
+      userId: '',
+      token: ''
     }
   },
   created() {
@@ -48,8 +69,10 @@ export default {
         }
       }).then(({ data: res }) => {
         this.name = res.data.userName
+        this.userId = res.data.id
       })
-    }
+    },
+    show() {}
   }
 }
 </script>
@@ -104,6 +127,27 @@ export default {
           height: 25px;
           border-radius: 50%;
           vertical-align: middle;
+        }
+        .user-menu {
+          display: none;
+          .user-name {
+            background-color: #f4f4f4;
+          }
+        }
+        ul {
+          position: absolute;
+          margin-top: 1px;
+          top: 50px;
+          right: 0px;
+          width: 200px;
+          border: 1 solid #e2e2e2;
+          li {
+            width: 200px;
+            height: 50px;
+            line-height: 50px;
+            text-align: left;
+            padding: 0 15px;
+          }
         }
       }
     }
