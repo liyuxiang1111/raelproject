@@ -11,13 +11,13 @@
           <!-- 图片end -->
           <div class="type-main-position">
             <div class="type-main-title">
-              <h2>智腾教育</h2>
+              <h2>{{ member.projectName }}</h2>
             </div>
-            凤凰
+            {{ userLabel }}
             <div class="type-main-content">
-              <p style="color:gray;">内容介绍 :</p>
+              <p style="color:gray;">项目内容：</p>
               <div class="type-content">
-                project.projectHead
+                {{ projectContent }}
               </div>
             </div>
           </div>
@@ -26,8 +26,9 @@
         </div>
       </div>
     </section>
-    <Members></Members>
+    <Members @imformation="getInformation"></Members>
     <Footer></Footer>
+    <Modal></Modal>
   </div>
 </template>
 
@@ -35,16 +36,29 @@
 import Nav from '@/components/Nav/Personnav.vue'
 import Members from '@/components/Member/Members/Members.vue'
 import Footer from '@/components/Footer/Copyright.vue'
+import Modal from '@/components/Modal/Modal.vue'
 export default {
   data() {
     return {
-      imag: require(`@/assets/image/type_bg.png`)
+      imag: '',
+      member: {},
+      userLabel: '',
+      projectContent: ''
     }
   },
   components: {
     Nav,
     Members,
-    Footer
+    Footer,
+    Modal
+  },
+  methods: {
+    getInformation(val) {
+      this.member = val
+      this.userLabel = this.member.author.userLabel
+      this.projectContent = this.member.projectBody.projectContent
+      this.imag = require(`../../assets/image/projectImg/` + this.member.projectImg)
+    }
   }
 }
 </script>

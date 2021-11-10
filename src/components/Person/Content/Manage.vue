@@ -2,11 +2,14 @@
   <div class="manage-container">
     <div class="manage-box">
       <div class="user-manage-header">
-        <div class="count">共<span>7</span>个项目</div>
-        <Project></Project>
-        <div class="pagebar-box">
-          <Pagebar></Pagebar>
+        <div class="count">
+          共<span>{{ length }}</span
+          >个项目
         </div>
+        <Project></Project>
+        <!-- <div class="pagebar-box">
+          <Pagebar></Pagebar>
+        </div> -->
       </div>
     </div>
   </div>
@@ -15,10 +18,31 @@
 <script>
 import Project from '@/components/Person/Content/Manage/Project.vue'
 import Pagebar from '@/components/Pagebar/Pagebar.vue'
+import bus from '@/components/eventbus.js'
+/* import bus from '@/components/eventbus.js' */
 export default {
+  /*   created() {
+    bus.$on('share', val => {
+      this.listManage = val
+      console.log('ok')
+      console.log(this.listManage)
+    })
+  }, */
+  data() {
+    return {
+      listManage: [],
+      length: 0
+    }
+  },
   components: {
     Project,
     Pagebar
+  },
+  created() {
+    bus.$on('shareTotal', val => {
+      console.log('recive')
+      this.length = val
+    })
   }
 }
 </script>

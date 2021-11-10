@@ -21,7 +21,7 @@ export default {
   }
 }
 </script>
-8
+
 <style lang="less" scroped>
 .components-box {
   h2 {

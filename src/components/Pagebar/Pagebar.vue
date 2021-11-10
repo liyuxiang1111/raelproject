@@ -2,22 +2,13 @@
   <div class="pagebar-container">
     <div class="pagebar-box">
       <ul>
-        <router-link to="">
+        <!-- <router-link to="" >
           <li class="glyphicon glyphicon-backward"></li>
+        </router-link> -->
+        <router-link to="" v-for="item in need.pageSet" :key="item" @click.native="pageMove(item)">
+          <li class="page" :class="{ nowBar: pageNow == item }">{{ item }}</li>
         </router-link>
-        <router-link to="">
-          <li class="page">1</li>
-        </router-link>
-        <router-link to="">
-          <li class="page">2</li>
-        </router-link>
-        <router-link to="">
-          <li class="page">3</li>
-        </router-link>
-        <router-link to="">
-          <li class="page">4</li>
-        </router-link>
-        <router-link to="">
+        <router-link to="" @click.native="pageMove(need.nextPage)">
           <li class="glyphicon glyphicon-chevron-right"></li>
         </router-link>
       </ul>
@@ -26,13 +17,25 @@
 </template>
 
 <script>
-export default {}
+export default {
+  props: ['need'],
+  methods: {
+    pageMove(pageNum) {
+      this.$emit('pageNumChange', pageNum)
+      this.pageNow = pageNum
+    }
+  },
+  data() {
+    return {
+      pageNow: this.need.pageNum
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
 .pagebar-container {
   .pagebar-box {
-    float: left;
     width: 350px;
     height: 50px;
     line-height: 50px;
@@ -57,5 +60,9 @@ export default {}
       }
     }
   }
+}
+.nowBar {
+  background-color: rgb(44, 107, 168);
+  color: white;
 }
 </style>

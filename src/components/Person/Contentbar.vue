@@ -2,7 +2,7 @@
   <div class="contentbar-container">
     <div class="contentbar">
       <ul>
-        <router-link to="/person">
+        <router-link to="/person" @click.native="showProject">
           <li>
             <span class="glyphicon glyphicon-send"></span>
             我创建的
@@ -33,7 +33,7 @@
             关于隐私
           </li>
         </router-link>
-        <router-link data-toggle="modal" data-target="#deleteUser" to="" @click="logout">
+        <router-link to="" @click.native="logout">
           <li>
             <span class="glyphicon glyphicon-off"></span>
             注销用户
@@ -45,10 +45,26 @@
 </template>
 
 <script>
+import bus from '@/components/eventbus.js'
 export default {
+  props: ['projectList'],
   methods: {
     logout() {
-      console.log(90)
+      bus.$emit('shareToModal', this.modalList)
+    },
+    showProject() {
+      bus.$emit('share', this.projectList)
+      this.$router.go(0)
+    }
+  },
+  data() {
+    return {
+      modalList: {
+        flag: 1,
+        title: '注销',
+        content: '请问是否注销',
+        btn: '注销'
+      }
     }
   }
 }

@@ -6,7 +6,7 @@
         <div v-for="item in list" :key="item.projectId" class="col-lg-3">
           <router-link :to="{ path: '/project/' + item.projectId }">
             <div class="thumbnail">
-              <img :src="imag" alt="" />
+              <img :src="require('../../../assets/image/projectImg/' + item.projectImg)" alt="" />
               <div class="caption">
                 <h3>{{ item.projectName }}</h3>
                 <p>{{ item.createTime }}</p>
@@ -27,18 +27,27 @@ export default {
   data() {
     return {
       list: [],
-      imag: require(`@/assets/image/person_simple.jpg`)
+      imag: require(`@/assets/image/person_simple.jpg`),
+      token: '',
+      flag: true
     }
   },
   created() {
+    this.token = localStorage.getItem('Authorizatio')
     this.initProject()
   },
   methods: {
     async initProject() {
-      await this.$http.get('index/hot/project').then(({ data: res }) => {
+      await this.$http({
+        method: 'GET',
+        url: 'index/hot/project',
+        headers: {
+          Authorization: this.token
+        }
+      }).then(({ data: res }) => {
         console.log(res.data)
         this.list = res.data
-        console.log(res.data[0].projectId)
+        /* console.log(res.data[0].projectId) */
       })
     }
   }

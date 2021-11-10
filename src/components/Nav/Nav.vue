@@ -19,7 +19,7 @@
                 <router-link to="/home"> 首页 <span class="sr-only">(current)</span></router-link>
               </li>
               <li><router-link to="/search">搜索</router-link></li>
-              <li class="dropdown">
+              <!-- <li class="dropdown">
                 <router-link class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" to="/home">发现<span class="caret"></span></router-link>
                 <ul class="dropdown-menu">
                   <li><a href="#">圈子</a></li>
@@ -29,7 +29,7 @@
                   <li role="separator" class="divider"></li>
                   <li><router-link to="/home">广告投放</router-link></li>
                 </ul>
-              </li>
+              </li> -->
             </ul>
             <form action="" class="navbar-form navbar-left">
               <div class="form-group">
@@ -39,7 +39,7 @@
             </form>
             <div class="user-position">
               <router-link to="/person">
-                <img src="/src/assets/image/person_simple.jpg" class="img-circle user-head" id="user-head" />
+                <img :src="imag" class="img-circle user-head" id="user-head" />
                 <div class="user-name">{{ name }}</div>
               </router-link>
             </div>
@@ -56,7 +56,8 @@ export default {
   data() {
     return {
       name: '',
-      token: ''
+      token: '',
+      imag: ''
     }
   },
   created() {
@@ -65,6 +66,7 @@ export default {
   },
   methods: {
     async initNavBar() {
+      console.log('nav的' + this.token)
       await this.$http({
         method: 'GET',
         url: '/user/currentUser',
@@ -73,6 +75,7 @@ export default {
         }
       }).then(({ data: res }) => {
         this.name = res.data.userName
+        this.imag = require(`../../assets/image/userImg/` + res.data.id + `.png`)
       })
     }
   }
@@ -100,6 +103,7 @@ export default {
     .user-name {
       float: left;
       height: 50px;
+      margin-left: 20px;
       line-height: 50px;
     }
   }

@@ -30,6 +30,12 @@ export default {}
   button {
     cursor: pointer;
   }
+  .white {
+    background-color: #ffffff;
+  }
+  .boxshadowcolor {
+    box-shadow: 0 2px 4px 0 var(--cb-color-shadow, rgba(0, 0, 0, 0.16));
+  }
   button,
   input {
     font-family: Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB, '\5B8B\4F53', sans-serif;

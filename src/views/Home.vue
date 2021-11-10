@@ -3,7 +3,9 @@
     <div class="home-box">
       <Nav></Nav>
     </div>
-    <Slideshow></Slideshow>
+    <div class="slideshow-box">
+      <Slideshow></Slideshow>
+    </div>
     <Recommends></Recommends>
     <Recommendprojects></Recommendprojects>
     <Rank></Rank>

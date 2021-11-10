@@ -1,104 +1,158 @@
 <template>
   <div class="resource-container">
-    <div class="resource-box">
+    <div ref="resource" class="resource-box">
       <div class="count">
         <h2>资源总览</h2>
         <ul>
           <li>我加入的</li>
-          <li>待完成的</li>
+          <li>我创建的</li>
           <li>我参加的</li>
         </ul>
         <ul>
-          <li>2</li>
-          <li>2</li>
-          <li>2</li>
+          <li>{{ totalCount }}</li>
+          <li>{{ createProject }}</li>
+          <li>{{ joinedProject }}</li>
         </ul>
         <div class="count-button">
-          <button type="button" class="btn btn-info">创建项目</button>
-          <button type="button" class="btn btn-info">资源搜索</button>
+          <button type="button" class="btn btn-info" @click="create">创建项目</button>
+          <button type="button" class="btn btn-info" @click="search">资源搜索</button>
         </div>
       </div>
       <div class="chart-box">
-        <h2>用户名称</h2>
-        <img :src="imag" class="fan-diagram" alt="" />
+        <h2>{{ name }}</h2>
+        <img :src="userimag" class="fan-diagram" alt="" />
       </div>
       <div class="newflash">
-        <div class="new-header">
-          <ul>
-            <li class="fl">综合</li>
-            <li class="fl">公告</li>
-            <li class="fl">社区</li>
-            <li class="fl">消息</li>
-          </ul>
+        <div style="height:50px;padding-top: 15px">
+          <h2 style="border-bottom: 1px solid #dedede;">请求快讯</h2>
         </div>
-        <div class="move-position">
-          <a id="left" class="carousel-control glyphicon glyphicon-chevron-left" v-on:click="prev()"></a>
-          <a id="right" class="carousel-control glyphicon glyphicon-chevron-right" v-on:click="next()"></a>
-        </div>
-        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner" role="listbox" id="submit_style" style="position: relative;height: 170px;margin-top: 25px;">
-            <div class="item active" v-for="item in requestList" :key="item.id">
-              <img src="request.image" />
-              <div class="userName">
-                {{ item.userName }}
-              </div>
-              <div class="userSex">
-                {{ item.userSex }}
-              </div>
-              <div class="join_project">
-                <a href="project?actionName=showresource&projectId=${list.projectId}">
-                  申请的项目
-                </a>
-                <a href="javascript:;" data-toggle="modal" data-target="#${list.requestId}">
-                  查看他的申请
-                </a>
+        <swiper :options="swiperOption" class="swiper-container swiper-pagination1" ref="mySwiper">
+          <!-- 添加的图片 -->
+          <swiper-slide v-for="item in requestList" :key="item.requestId">
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+              <div class="carousel-inner" role="listbox" id="submit_style" style="position: relative;height: 170px;margin-top: 25px;">
+                <div class="item active">
+                  <img :src="require('../../assets/image/userImg/' + item.userId + '.png')" alt="" style="height:100px" />
+                  <div class="userName">
+                    {{ item.userName }}
+                  </div>
+                  <div class="userSex">
+                    {{ item.userLargestStudy }}
+                  </div>
+                  <div class="join_project">
+                    <router-link to="">
+                      申请的项目
+                    </router-link>
+                    <router-link to="" style="margin-left:30px">
+                      查看他的申请
+                    </router-link>
+                  </div>
+                </div>
               </div>
             </div>
-            <ol id="button_ol" class="carousel-indicators" style="position: relative;">
-              <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-              <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-            </ol>
-          </div>
-        </div>
+          </swiper-slide>
+          <!-- 指示点 -->
+          <div class="swiper-pagination" slot="pagination"></div>
+
+          <!-- 左右导航栏 -->
+          <div v-if="requestList.length == 1 ? false : true" class="swiper-button-prev" slot="button-prev"></div>
+          <div v-if="requestList.length == 1 ? false : true" class="swiper-button-next" slot="button-next"></div>
+        </swiper>
       </div>
     </div>
-    <div class="content-button">
+    <div class="content-button" @click="hide">
       <span class="change_font glyphicon glyphicon-hand-down real_font"> </span>
     </div>
   </div>
 </template>
 
 <script>
+import bus from '@/components/eventbus.js'
+require('@/assets/css/swiper.css')
+import '@/assets/css/swiper.css'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
+  props: ['requestList', 'createProject', 'joinedProject', 'totalCount'],
+  created() {
+    bus.$on('shareName', val => {
+      this.name = val
+    })
+    bus.$on('shareId', val => {
+      this.userimag = require(`../../assets/image/userImg/` + val + `.png`)
+    })
+  },
   methods: {
-    next() {
-      this.index++
-      if (this.index >= this.requestList) {
-        this.index = 0
-      }
+    create() {
+      this.$router.push('/person/create')
     },
-    prev() {
-      this.index--
-      if (this.index < 0) {
-        this.index = this.requestList
+    search() {
+      this.$router.push('/search')
+    },
+    hide() {
+      if (this.flag) {
+        this.$refs.resource.style.display = 'none'
+        this.flag = false
+      } else {
+        this.$refs.resource.style.display = 'block'
+        this.flag = true
       }
     }
   },
-  name: 'Resource',
   data() {
     return {
-      imag: require(`@/assets/image/person_simple.jpg`),
-      requestList: [
-        {
-          userName: '李四',
-          userSex: '男'
+      flag: true,
+      name: '',
+      userimag: '',
+      //轮播图
+      imag1: require(`@/assets/image/slider-image1.jpg`),
+      imag2: require(`@/assets/image/slider-image2.jpg`),
+      imag3: require(`@/assets/image/slider-image3.jpg`),
+      swiperOption: {
+        pagination: '.swiper-pagination1',
+        slidesPerView: 1,
+        spaceBetween: 30,
+        centeredSlides: false,
+        spaceBetween: 0,
+        onSlideChangeEnd: swiper => {
+          //放swiper的回调方法
+          this.page = swiper.realIndex + 1
+          this.index = swiper.realIndex
         },
-        {
-          userName: '张三',
-          suerSex: '女'
+        //左右导航栏
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        },
+        //自动播放
+        autoplay: {
+          delay: 2000,
+          disableOnInteraction: false
+        },
+        //指示点
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true
+        },
+        //循环
+        loop: true
+      },
+      //定义swiper对象
+      computed: {
+        swiper() {
+          return this.$refs.mySwiper.swiper
         }
-      ]
+      },
+      //当Vue时实例被挂载时，调用slideTo方法
+      mounted() {
+        this.swiper.slideTo(0, 0, false)
+      }
+      //轮播图结束
     }
+  },
+  components: {
+    //轮播图组件
+    swiper,
+    swiperSlide
   }
 }
 </script>
@@ -167,8 +221,8 @@ export default {
     .newflash {
       float: right;
       padding: 0 0 0 10px;
-      height: 300px;
-      border-bottom: 1px solid #e0e2e2;
+      height: 260px;
+      width: 300px;
       .new-header {
         padding: 0 14px 0 14px;
         height: 60px;
@@ -209,6 +263,8 @@ export default {
     margin-top: 8px;
   }
   .item {
+    position: absolute;
+    left: 200px;
     display: block;
     width: 270px;
     margin-left: 20px;

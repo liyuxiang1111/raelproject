@@ -24,7 +24,7 @@ const router = new VueRouter({
     { path: '/login', component: Login },
     { path: '/register', component: Register },
     { path: '/home', component: Home },
-    { path: '/member', component: Member },
+    { path: '/member/:memberid', component: Member },
     { path: '/project/:projectid', component: Project },
     { path: '/type/:recommendid', component: Type },
     {
@@ -33,6 +33,7 @@ const router = new VueRouter({
       children: [
         { path: 'privacy', component: Privacy },
         { path: 'information', component: Information },
+        { path: 'manage', component: Manage },
         { path: '', component: Manage },
         { path: 'create', component: Create }
       ]

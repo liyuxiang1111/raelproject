@@ -14,27 +14,27 @@
             <router-link to="/home">首页</router-link>
           </li>
           <li>
-            <router-link to="">信息</router-link>
+            <router-link to="" class="">信息</router-link>
           </li>
-          <li class="user-head">
-            <router-link @mouseenter="show" to="/person">
+          <li @mouseleave="move" class="user-head">
+            <router-link @mousemove.native="show" to="/person">
               <img :src="imag" alt="" />
             </router-link>
-            <ul class="white boxshadowcolor user-menu">
+            <ul ref="imformation" class="white boxshadowcolor user-menu">
               <li class="user-name ">
-                <div class="user_name">${user.userName}</div>
+                <div class="user_name">{{ name }}</div>
               </li>
               <li class=" glyphicon glyphicon-search">
                 <router-link to="/search">搜索</router-link>
               </li>
               <li class=" glyphicon glyphicon-pencil">
-                <router-link to="">修改个人信息</router-link>
+                <router-link to="/person/create">修改个人信息</router-link>
               </li>
               <li class="glyphicon glyphicon-folder-close">
-                <router-link to="">我的项目</router-link>
+                <router-link to="/person/manage">我的项目</router-link>
               </li>
               <li class="glyphicon glyphicon-off">
-                <router-link to="">退出登录</router-link>
+                <router-link @click.native="logout" to="">退出登录</router-link>
               </li>
             </ul>
           </li>
@@ -45,14 +45,21 @@
 </template>
 
 <script>
+import bus from '@/components/eventbus.js'
 export default {
   props: ['list'],
   data() {
     return {
-      imag: require(`@/assets/image/person_simple.jpg`),
+      imag: '',
       name: '',
       userId: '',
-      token: ''
+      token: '',
+      modalList: {
+        flag: 1,
+        title: '注销',
+        content: '请问是否注销',
+        btn: '注销'
+      }
     }
   },
   created() {
@@ -70,9 +77,21 @@ export default {
       }).then(({ data: res }) => {
         this.name = res.data.userName
         this.userId = res.data.id
+        this.imag = require(`../../assets/image/userImg/` + res.data.id + `.png`)
+        bus.$emit('shareName', this.name)
+        bus.$emit('shareId', this.userId)
       })
     },
-    show() {}
+    show() {
+      console.log('show')
+      this.$refs.imformation.style.display = 'block'
+    },
+    move() {
+      this.$refs.imformation.style.display = 'none'
+    },
+    logout() {
+      bus.$emit('shareToModal', this.modalList)
+    }
   }
 }
 </script>

@@ -1,33 +1,35 @@
 <template>
   <div class="searchproject-container">
     <ul>
-      <li class="project-simple">
-        <div class="project-main">
-          <div class="project-img">
-            <a>
-              <img :src="imag" />
-            </a>
-          </div>
-          <div class="word-top">
-            <div class="project-title">
-              project.projectName
+      <li class="project-simple" v-for="item in list" :key="item.projectId">
+        <router-link :to="'/project/' + item.projectId">
+          <div class="project-main">
+            <div class="project-img">
+              <a>
+                <img :src="require('../../../assets/image/projectImg/' + item.projectImg)" />
+              </a>
             </div>
-            <div class="project-head">
-              project.projectHead
+            <div class="word-top">
+              <div class="project-title">
+                {{ item.projectName }}
+              </div>
+              <div class="project-head">
+                {{ item.projectBody.projectContent }}
+              </div>
+            </div>
+            <div class="word-button">
+              <div class="visitNumber">创始人：{{ item.author.userName }}</div>
+              <div class="projectType">{{ item.projectTypeName }}</div>
+              <div class="projectPeopleNum">成员数量：{{ item.visitNumber }}</div>
             </div>
           </div>
-          <div class="word-button">
-            <div class="createName">project.userId</div>
-            <div class="projectType">project.projectType</div>
-            <div class="projectPeopleNum">人员数量</div>
+          <div class="create-people">
+            <div class="csr">创始人</div>
+            <div><img :src="require(`../../../assets/image/userImg/` + item.author.userId + `.png`)" alt="" class="create-people-img img-circle" style="width:50px;height:50px" /></div>
+            <div class="create-people-name">创始人名字：{{ item.author.userName }}</div>
+            <div class="create-people-content">创始人简介：{{ item.author.userContent }}</div>
           </div>
-        </div>
-        <div class="create-people">
-          <div class="csr">创始人</div>
-          <div><img src="" alt="" class="create-people-img img-circle" /></div>
-          <div class="create-people-name">创始人名字</div>
-          <div class="create-people-content">创始人简介</div>
-        </div>
+        </router-link>
       </li>
     </ul>
   </div>
@@ -35,6 +37,7 @@
 
 <script>
 export default {
+  props: ['list'],
   data() {
     return {
       imag: require(`@/assets/image/person_simple.jpg`)
@@ -51,7 +54,7 @@ export default {
       background-color: rgb(230, 228, 228);
       margin-top: 20px;
       float: left;
-      width: 800px;
+      width: 1000px;
       height: 200px;
     }
   }
@@ -87,7 +90,7 @@ export default {
       overflow: hidden;
     }
     .word-button {
-      .createName {
+      .visitNumber {
         float: left;
         width: 200px;
       }
@@ -112,7 +115,7 @@ export default {
     height: 200px;
     border: 1px solid rgb(26, 106, 197);
     position: absolute;
-    margin-left: 850px;
+    margin-left: 1056px;
     .csr {
       position: absolute;
       margin-top: 9px;
@@ -133,6 +136,7 @@ export default {
       height: 60px;
       margin-left: 10px;
       margin-top: 15px;
+      overflow: hidden;
     }
   }
 }

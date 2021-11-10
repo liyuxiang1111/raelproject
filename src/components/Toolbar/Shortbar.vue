@@ -2,7 +2,7 @@
   <div class="shortbar-container">
     <div class="shortbar-box">
       <div class="top-box">
-        <router-link to="">置顶</router-link>
+        <router-link to="" @click.native="top($event)">置顶</router-link>
       </div>
       <div class="person-button">
         <router-link to="/person">个人</router-link>
@@ -18,7 +18,13 @@
 </template>
 
 <script>
-export default {}
+export default {
+  methods: {
+    top(e) {
+      console.log(e)
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

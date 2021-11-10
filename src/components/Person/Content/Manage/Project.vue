@@ -1,27 +1,28 @@
 <template>
   <div class="project-container">
-    <div class="project-box">
+    <div v-for="item in listManage" :key="item.projectId" class="project-box">
       <div class="project-head">
-        <span>{{ project.projectName }}</span>
-        <div>发布于{{ project.createTime }}</div>
+        <span>{{ item.projectName }}</span>
+        <div>发布于{{ item.createTime }}</div>
       </div>
-      <div class="project-introduce">{{ project.projectHead }}</div>
-      <div class="visitNum">
-        参与人数12人
+      <div class="project-introduce">
+        {{ item.projectHead }}
+        {{ item.projectBody.projectContent }}
       </div>
+      <div class="visitNum">参与人数人：{{ item.visitNumber }}</div>
       <div class="button-container">
         <div class="button-box">
           <li>
             <router-link to=""><span class="glyphicon glyphicon-edit">编辑</span></router-link>
           </li>
           <li>
-            <router-link to="/project"><span class="glyphicon glyphicon-book">管理</span></router-link>
+            <router-link :to="'/project/' + item.projectId"><span class="glyphicon glyphicon-book">管理</span></router-link>
           </li>
           <li>
-            <router-link to="/member"><span class="glyphicon glyphicon-user">成员</span></router-link>
+            <router-link :to="'/member/' + item.projectId"><span class="glyphicon glyphicon-user">成员</span></router-link>
           </li>
           <li>
-            <router-link to=""><span class="glyphicon glyphicon-minus-sign">删除</span></router-link>
+            <router-link @click.native="remove($event, item.projectId)" to=""><span class="glyphicon glyphicon-minus-sign">删除</span></router-link>
           </li>
         </div>
       </div>
@@ -30,15 +31,34 @@
 </template>
 
 <script>
+import bus from '@/components/eventbus.js'
 export default {
   data() {
     return {
-      project: {
-        projectName: '项目名称',
-        createTime: '发布时间',
-        projectHead: '项目题目',
-        projectId: '项目id'
+      listManage: [],
+      length: '',
+      modalList: {
+        title: '删除项目',
+        content: '是否删除项目',
+        btn: '删除',
+        flag: 3,
+        projectId: ''
       }
+    }
+  },
+  created() {
+    bus.$on('share', val => {
+      console.log('recive')
+      this.listManage = val
+    })
+  },
+  methods: {
+    remove(e, projectId) {
+      console.log('ok')
+      this.modalList.projectId = projectId
+      console.log('id')
+      console.log(this.modalList.projectId)
+      bus.$emit('shareToModal', this.modalList)
     }
   }
 }

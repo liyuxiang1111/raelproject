@@ -10,7 +10,7 @@
                 <div class="media">
                   <div class="media-left">
                     <router-link to="">
-                      <img class="media-object" src="" alt="" />
+                      <img class="media-object" :src="require('../../../assets/image/typeImg/' + item.typeImg)" alt="" />
                     </router-link>
                   </div>
                   <div class="media-box main-element">
@@ -33,16 +33,25 @@
 export default {
   data() {
     return {
-      list: []
+      list: [],
+      token: ''
     }
   },
   created() {
+    this.token = localStorage.getItem('Authorizatio')
     this.initRecommend()
   },
   methods: {
     async initRecommend() {
-      await this.$http.get('index/hot/type').then(({ data: res }) => {
+      await this.$http({
+        method: 'GET',
+        url: 'index/hot/type',
+        headers: {
+          Authorization: this.token
+        }
+      }).then(({ data: res }) => {
         this.list = res.data
+        console.log(res.data)
       })
     }
   }

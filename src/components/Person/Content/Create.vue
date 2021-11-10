@@ -10,7 +10,6 @@
           </li>
           <li>
             <span></span>
-            <input type="hidden" name="projectType-real" id="projectType-real" />
             <p class="text-projectType">项目标签:</p>
             <select name="projectType" id="projectType">
               <option>前端</option>

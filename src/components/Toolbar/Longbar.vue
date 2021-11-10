@@ -3,28 +3,28 @@
     <div class="subnav">
       <div class="sub-index">
         <ul class="sub-top">
-          <router-link to="" data-toggle="modal" data-target="#writeMycontent">
-            <li class="glyphicon glyphicon-envelope"></li>
+          <router-link v-if="1" to="" data-toggle="modal" data-target="#writeMycontent" @click.native="send">
+            <li @mousemove="show($event)" @mouseout="hide($event)" class="glyphicon glyphicon-envelope" title="去投递"></li>
             <p>去投递</p>
           </router-link>
 
-          <router-link to="" data-toggle="modal" data-target="#dontJoin">
-            <li class="glyphicon glyphicon-envelope"></li>
+          <router-link v-if="0" to="" data-toggle="modal" data-target="#dontJoin">
+            <li @mousemove="show($event)" @mouseout="hide($event)" class="glyphicon glyphicon-envelope"></li>
             <p>去投递</p>
           </router-link>
 
-          <router-link to="" data-toggle="modal" data-target="#postResource">
-            <li class="glyphicon glyphicon-envelope"></li>
+          <router-link to="" data-toggle="modal" data-target="#postResource" @click.native="upload">
+            <li @mousemove="show($event)" @mouseout="hide($event)" class="glyphicon glyphicon-envelope"></li>
             <p>去上传</p>
           </router-link>
 
           <router-link to="">
-            <li class="glyphicon glyphicon-time"></li>
+            <li @mousemove="show($event)" @mouseout="hide($event)" class="glyphicon glyphicon-time"></li>
             <p>已投递</p>
           </router-link>
         </ul>
         <ul class="sub-button">
-          <router-link to="">
+          <router-link to="" @click.native="flush">
             <li class="glyphicon glyphicon-chevron-up"></li>
           </router-link>
 
@@ -32,7 +32,7 @@
             <li>反馈</li>
           </router-link>
 
-          <router-link to="" data-toggle="modal" data-target="#closedProject">
+          <router-link to="" data-toggle="modal" data-target="#closedProject" @click.native="end">
             <li>结束项目</li>
           </router-link>
         </ul>
@@ -42,7 +42,66 @@
 </template>
 
 <script>
-export default {}
+import bus from '@/components/eventbus.js'
+export default {
+  data() {
+    return {
+      noSendModalList: {
+        content: '你是创建者不可以加入这个项目!!!',
+        btn: '确定'
+      },
+      sendModalList: {
+        title: '投递',
+        content: '投递内容',
+        btn: '发送',
+        flag: 6
+      },
+      endModalList: {
+        title: '结束',
+        content: '是否结束该项目',
+        btn: '确定'
+      },
+      uploadModalList: {
+        title: '上传',
+        content: '请确定上传文件',
+        btn: '上传',
+        projectId: this.$route.params.projectid,
+        flag: 5
+      }
+    }
+  },
+  props: ['memberAssionment', 'authorId', 'userId'],
+  methods: {
+    send() {
+      if (this.authorId == this.userId) {
+        alert('您是创建者不需要投递')
+      } else {
+        bus.$emit('shareToModal', this.sendModalList)
+      }
+    },
+    upload() {
+      if (this.memberAssionment >= 1) {
+        bus.$emit('shareToModal', this.uploadModalList)
+      } else {
+        alert('您的权限不足')
+      }
+    },
+    end() {
+      if (this.memberAssionment == 2) {
+        bus.$emit('shareToModal', this.endModalList)
+      } else {
+        alert('您的权限不足')
+      }
+    },
+    flush() {},
+    show(e) {
+      e.currentTarget.nextElementSibling.style.display = 'block'
+    },
+    hide(e) {
+      e.currentTarget.nextElementSibling.style.display = 'none'
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

@@ -1,41 +1,130 @@
 <template>
   <div class="members-container">
-    <div v-if="false" class="container">
-      <h2 style="color:red;height:200px">
-        你没有员工！！！！
-      </h2>
-    </div>
-    <div v-else class="result-main container">
+    <div v-if="memberList.length == 0 ? false : true" class="result-main container">
       <h2>成员列表</h2>
       <ul>
-        <li class="member-simple">
+        <li v-for="item in memberList" :key="item.memberId" class="member-simple">
           <div class="member-img">
-            <img :src="imag" class="img-circle" />
+            <img :src="require('../../../assets/image/userImg/' + item.memberImg)" class="img-circle" />
           </div>
           <div class="member-main">
             <div class="member-name">
-              <div>名字:</div>
+              <div>名字:{{ item.userName }}</div>
             </div>
             <div class="member-ziwu">
-              <div>权限:</div>
+              权限:
+              <div ref="assionment">{{ item.memberAssionment }}</div>
             </div>
             <div class="member-function">
-              <router-link to=""><span id="move" class="glyphicon glyphicon-minus"></span></router-link>
-              <router-link to=""><span id="upAs" class="glyphicon glyphicon-arrow-up"></span></router-link>
-              <router-link to=""><span id="doAs" class="glyphicon glyphicon-arrow-down"></span></router-link>
+              <router-link @click.native="move($event, item.memberId)" to=""><span id="move" class="glyphicon glyphicon-minus"></span></router-link>
+              <router-link @click.native="up($event, item.memberAssionment, item.memberId)" to=""><span id="upAs" class="glyphicon glyphicon-arrow-up"></span></router-link>
+              <router-link @click.native="low($event, item.memberAssionment, item.memberId)" to=""><span id="doAs" class="glyphicon glyphicon-arrow-down"></span></router-link>
             </div>
           </div>
         </li>
       </ul>
     </div>
+    <div v-else class="container">
+      <h2 style="color:red;height:200px">
+        你没有员工！！！！
+      </h2>
+    </div>
   </div>
 </template>
 
 <script>
+import bus from '@/components/eventbus.js'
 export default {
   data() {
     return {
-      imag: require(`@/assets/image/type_bg.png`)
+      memberList: [],
+      flag: true,
+      proObj: {},
+      modalList: {
+        flag: 2,
+        title: '删除用户',
+        content: '请问是否删除该用户',
+        btn: '删除',
+        memberId: ''
+      },
+      token: ''
+    }
+  },
+  created() {
+    this.token = localStorage.getItem('Authorizatio')
+    this.initMenmber()
+    console.log('ok')
+  },
+  updated() {
+    this.$nextTick(this.shareToMember())
+  },
+  methods: {
+    initMenmber() {
+      console.log(this.$route.params.memberid)
+      this.$http({
+        url: '/member/' + this.$route.params.memberid,
+        method: 'post',
+        headers: {
+          Authorization: this.token
+        }
+      }).then(({ data: res }) => {
+        if (res.success == false) {
+        } else {
+          console.log('hhh')
+          console.log(res.data)
+          this.memberList = res.data.projectMemberList
+          this.proObj = res.data.projectVo
+        }
+      })
+    },
+    move(e, memberId) {
+      this.modalList.memberId = memberId
+      bus.$emit('shareToModal', this.modalList)
+    },
+    async up(e, memberAssionment, memberId) {
+      console.log(memberAssionment)
+      console.log(memberId)
+      await this.$http({
+        url: '/member/up',
+        method: 'post',
+        data: {
+          authority: memberAssionment,
+          memberId: memberId
+        }
+      }).then(({ data: res }) => {
+        if (res.success == false) {
+          console.log(res)
+          alert(res.msg)
+        } else {
+          alert('修改成功权限加1')
+          this.$router.go(0)
+        }
+      })
+    },
+    async low(e, memberAssionment, memberId) {
+      console.log(memberAssionment)
+      console.log(memberId)
+      await this.$http({
+        url: '/member/low',
+        method: 'post',
+        data: {
+          authority: memberAssionment,
+          memberId: memberId
+        }
+      }).then(({ data: res }) => {
+        if (res.success == false) {
+          console.log(res)
+          alert(res.msg)
+        } else {
+          alert('修改成功权限减1')
+          this.$router.go(0)
+        }
+      })
+    },
+    shareToMember() {
+      console.log('shareToMember')
+      console.log(this.proObj)
+      this.$emit('imformation', this.proObj)
     }
   }
 }
